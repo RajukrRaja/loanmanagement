@@ -1,0 +1,185 @@
+<?php
+
+namespace Database\Seeders;
+
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+
+class DatabaseSeeder extends Seeder
+{
+    public function run(): void
+    {
+        // Regions
+        DB::table('regions')->insert([
+            ['id' => 'RG0001', 'name' => 'Region 1', 'created_at' => now(), 'updated_at' => now()],
+            ['id' => 'RG0002', 'name' => 'Region 2', 'created_at' => now(), 'updated_at' => now()],
+        ]);
+
+        // Branches
+        DB::table('branches')->insert([
+            ['id' => 'BR0001', 'name' => 'Branch 1', 'region_id' => 'RG0001', 'created_at' => now(), 'updated_at' => now()],
+            ['id' => 'BR0002', 'name' => 'Branch 2', 'region_id' => 'RG0001', 'created_at' => now(), 'updated_at' => now()],
+            ['id' => 'BR0003', 'name' => 'Branch 3', 'region_id' => 'RG0002', 'created_at' => now(), 'updated_at' => now()],
+            ['id' => 'GS0001', 'name' => 'Branch GS', 'region_id' => null, 'created_at' => now(), 'updated_at' => now()],
+        ]);
+
+        // Users
+        DB::table('users')->insert([
+            [
+                'id' => 1,
+                'name' => 'Super Admin',
+                'email' => 'superadmin@example.com',
+                'password' => Hash::make('password'),
+                'role' => 'super_admin',
+                'sub_admin_id' => null,
+                'region_id' => null,
+                'branch_id' => null,
+                'employee_id' => null,
+                'team_manager_id' => null,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'id' => 2,
+                'name' => 'Sub Admin 1',
+                'email' => 'subadmin1@example.com',
+                'password' => Hash::make('password'),
+                'role' => 'sub_admin',
+                'sub_admin_id' => null,
+                'region_id' => null,
+                'branch_id' => null,
+                'employee_id' => null,
+                'team_manager_id' => null,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'id' => 3,
+                'name' => 'Sub Admin 2',
+                'email' => 'subadmin2@example.com',
+                'password' => Hash::make('password'),
+                'role' => 'sub_admin',
+                'sub_admin_id' => null,
+                'region_id' => null,
+                'branch_id' => null,
+                'employee_id' => null,
+                'team_manager_id' => null,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'id' => 4,
+                'name' => 'Region Head 1',
+                'email' => 'regionhead1@example.com',
+                'password' => Hash::make('password'),
+                'role' => 'region_head',
+                'sub_admin_id' => 2,
+                'region_id' => null,
+                'branch_id' => null,
+                'employee_id' => null,
+                'team_manager_id' => null,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'id' => 5,
+                'name' => 'Branch Manager 1',
+                'email' => 'branch1@example.com',
+                'password' => Hash::make('password'),
+                'role' => 'branch',
+                'sub_admin_id' => null,
+                'region_id' => 'RG0001',
+                'branch_id' => null,
+                'employee_id' => null,
+                'team_manager_id' => null,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'id' => 6,
+                'name' => 'Sub Branch Manager 1',
+                'email' => 'subbranch1@example.com',
+                'password' => Hash::make('password'),
+                'role' => 'sub_branch',
+                'sub_admin_id' => null,
+                'region_id' => null,
+                'branch_id' => 'BR0002',
+                'employee_id' => null,
+                'team_manager_id' => null,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'id' => 7,
+                'name' => 'Employee 1',
+                'email' => 'employee1@example.com',
+                'password' => Hash::make('password'),
+                'role' => 'employee',
+                'sub_admin_id' => null,
+                'region_id' => null,
+                'branch_id' => 'BR0003',
+                'employee_id' => null,
+                'team_manager_id' => null,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'id' => 8,
+                'name' => 'Customer 1',
+                'email' => 'customer1@example.com',
+                'password' => Hash::make('password'),
+                'role' => 'customer',
+                'sub_admin_id' => null,
+                'region_id' => null,
+                'branch_id' => null,
+                'employee_id' => 7,
+                'team_manager_id' => null,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'id' => 9,
+                'name' => 'Team Manager 1',
+                'email' => 'teammanager1@example.com',
+                'password' => Hash::make('password'),
+                'role' => 'team_manager',
+                'sub_admin_id' => 2,
+                'region_id' => null,
+                'branch_id' => null,
+                'employee_id' => null,
+                'team_manager_id' => null,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'id' => 10,
+                'name' => 'Telecaller 1',
+                'email' => 'telecaller1@example.com',
+                'password' => Hash::make('password'),
+                'role' => 'telecaller',
+                'sub_admin_id' => null,
+                'region_id' => null,
+                'branch_id' => null,
+                'employee_id' => null,
+                'team_manager_id' => 9,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'id' => 11,
+                'name' => 'Accountant 1',
+                'email' => 'accountant1@example.com',
+                'password' => Hash::make('password'),
+                'role' => 'accountant',
+                'sub_admin_id' => null,
+                'region_id' => null,
+                'branch_id' => null,
+                'employee_id' => null,
+                'team_manager_id' => null,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+        ]);
+    }
+}

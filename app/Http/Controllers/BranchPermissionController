@@ -1,0 +1,104 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\RoleDropdownPermission;
+use App\Models\AuditLog;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+
+class BranchPermissionController extends Controller
+{
+    /**
+     * Initialize controller with middleware for authentication.
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware(function ($request, $next) {
+            if (!in_array(Auth::user()->role_id, [1, 2])) {
+                Log::error('Unauthorized access attempt', [
+                    'user_id' => Auth::id() ?? 'Guest',
+                    'path' => $request->path(),
+                ]);
+                abort(403, 'Unauthorized');
+            }
+            return $next($request);
+        })->only('updateBranchPermission');
+    }
+
+    /**
+     * Update permissions for the Branch dropdown item (ID 3).
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function updateBranchPermission(Request $request)
+    {
+        $request->validate([
+            'can_create' => ['nullable', 'boolean'],
+            'can_read' => ['nullable', 'boolean'],
+            'can_update' => ['nullable', 'boolean'],
+            'can_delete' => ['nullable', 'boolean'],
+        ]);
+
+        $roleId = Auth::user()->role_id;
+        $dropdownItemId = 3; // Fixed to Branch item ID
+
+        // Check if the user has update permission for this item
+        $existingPermission = RoleDropdownPermission::where('role_id', $roleId)
+            ->where('dropdown_item_id', $dropdownItemId)
+            ->first();
+
+        if (!$existingPermission || !$existingPermission->can_update) {
+            Log::warning('User lacks update permission for Branch', [
+                'role_id' => $roleId,
+                'dropdown_item_id' => $dropdownItemId,
+            ]);
+            return response()->json(['success' => false, 'message' => 'You do not have permission to update Branch permissions'], 403);
+        }
+
+        DB::beginTransaction();
+        try {
+            $permissionData = [
+                'can_create' => $request->input('can_create', $existingPermission->can_create),
+                'can_read' => $request->input('can_read', $existingPermission->can_read),
+                'can_update' => $request->input('can_update', $existingPermission->can_update),
+                'can_delete' => $request->input('can_delete', $existingPermission->can_delete),
+            ];
+
+            $existingPermission->update($permissionData);
+
+            AuditLog::create([
+                'user_id' => Auth::id(),
+                'action' => 'Update Branch Permission',
+                'table_name' => 'role_dropdown_permissions',
+                'record_id' => $existingPermission->id,
+                'old_value' => json_encode($existingPermission->getOriginal()),
+                'new_value' => json_encode($permissionData),
+            ]);
+
+            DB::commit();
+            Log::info('Branch permission updated successfully', [
+                'role_id' => $roleId,
+                'dropdown_item_id' => $dropdownItemId,
+                'permissions' => $permissionData,
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Branch permission updated successfully',
+                'permissions' => $permissionData,
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Failed to update Branch permission', [
+                'error' => $e->getMessage(),
+                'stack' => $e->getTraceAsString(),
+            ]);
+            return response()->json(['success' => false, 'message' => 'Failed to update Branch permission'], 500);
+        }
+    }
+}

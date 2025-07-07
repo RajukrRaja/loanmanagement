@@ -1,0 +1,4 @@
+[03-Jul-2025 08:22:01 UTC] PHP Fatal error:  Namespace declaration statement has to be the very first statement or after any declare call in the script in /home/emishopco/public_html/app/Console/Commands/ApplyLoanPenalties.php on line 4
+[03-Jul-2025 08:23:01 UTC] PHP Fatal error:  Namespace declaration statement has to be the very first statement or after any declare call in the script in /home/emishopco/public_html/app/Console/Commands/ApplyLoanPenalties.php on line 4
+[03-Jul-2025 08:24:01 UTC] PHP Fatal error:  Namespace declaration statement has to be the very first statement or after any declare call in the script in /home/emishopco/public_html/app/Console/Commands/ApplyLoanPenalties.php on line 4
+[03-Jul-2025 08:24:09 UTC] PHP Fatal error:  Namespace declaration statement has to be the very first statement or after any declare call in the script in /home/emishopco/public_html/app/Console/Commands/ApplyLoanPenalties.php on line 4
